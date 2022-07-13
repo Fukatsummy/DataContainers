@@ -24,18 +24,65 @@ public:
 		cout << "EDestructor:\t" << this << endl;
 	}
 	friend class ForwardList;
+	friend class Iterator;
 	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
 };
+
 int Element::count = 0;
+
+class Iterator
+{
+	Element* Temp;
+public:
+	Iterator(Element* Temp = nullptr):Temp(Temp)
+	{
+		cout << "ItConstructor:\t" << this << endl;
+	}
+	~Iterator()
+	{
+		cout << "ItDestructor:\t" << this << endl;
+	}
+	Iterator& operator++()
+	{
+		Temp = Temp->pNext;
+		return *this;
+	}
+	Iterator operator++(int)
+	{
+		Iterator old = *this;
+		Temp = Temp->pNext;
+		return old; 
+	}
+	bool operator ==(const Iterator& other)const
+	{
+		return this->Temp == other.Temp;
+	}
+	bool operator !=(const Iterator& other)const
+	{
+		return this->Temp != other.Temp;
+	}
+	const int& operator*()const
+	{
+		return Temp->Data;
+	}
+	int& operator*()
+	{
+		return Temp->Data;
+	}
+};
 
 class ForwardList
 {
 	Element* Head;   // ГОлова списка 
 	unsigned int size;
 public:
-	It begin()
+	Iterator begin()
 	{
 		return Head;
+	}
+	Iterator end()
+	{
+		return nullptr;
 	}
 	ForwardList()
 	{
@@ -66,7 +113,7 @@ public:
 		this->size = other.size;
 		other.Head = nullptr;
 		other.size = 0;*/
-		*this = std::move( other);
+		*this = std::move(other);
 		cout << "MoveConstructor:\t" << this << endl;
 	}
 	~ForwardList()
@@ -74,7 +121,7 @@ public:
 		while (Head)pop_front();
 		cout << "LDestructor:\t" << this << endl;
 	}
-	
+
 
 	/////    Operators       /////
 
@@ -270,7 +317,7 @@ void main()
 	list2.print();
 
 	cout << delimiter << endl;
-	
+
 	//ForwardList list3= list1 + list2;  //MoveConstructor
 	ForwardList list3;
 	list3 = list1 + list2;
@@ -292,9 +339,14 @@ void main()
 #endif // RANGE_BASED_ARRAY
 
 	ForwardList list = { 3,5,8,13,21 };
+	list.print();
 	for (int i : list)
 		cout << i << tab;
 	cout << endl;
-	//list.print();
 
+	for (Iterator it = list.begin(); it != list.end();++it)
+	{
+		cout << *it << tab;
+	}
+	cout << endl;
 }
