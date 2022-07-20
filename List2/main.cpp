@@ -44,11 +44,11 @@ class List
 	{
 		int Data;
 		Element* pNext;
-		Element* pPrevious;
+		Element* pPrev;
 		//static int count;
 	public:
 		Element(int Data, Element* pNext = nullptr, Element* pPrevious = nullptr)
-			:Data(Data), pNext(pNext), pPrevious(pPrevious)
+			:Data(Data), pNext(pNext), pPrev(pPrevious)
 		{
 			/*this->Data = Data;
 			this->pNext = pNext;
@@ -135,7 +135,7 @@ public:
 		if (Head == nullptr && Tail == nullptr)
 			Head = Tail = new Element(Data);
 		else
-			Head = Head->pPrevious = new Element(Data, Head);
+			Head = Head->pPrev = new Element(Data, Head);
 		size++;
 	}
 	void push_back(int Data)
@@ -155,6 +155,31 @@ public:
 			Tail = Tail->pNext = new Element(Data, nullptr, Tail);
 		size++;
 	}
+	void insert(int Data, int index)
+	{
+		if (index > size)return;
+		if (index == 0)return push_front(Data);
+		if (index == size)return push_back(Data);
+		Element* Temp;
+		if (index < size / 2)
+		{
+			Temp = Head;
+			for (int i = 0; i < index; i++)Temp = Temp->pNext;
+		}
+		else
+		{
+			Temp = Tail;
+			for (int i = 0; i < size -index -  1; i++)Temp = Temp->pPrev;
+		}
+
+		/*Element* New = new Element(Data);
+		New->pNext = Temp;
+		New->pPrev = Temp->pPrev;
+		Temp->pPrev->pNext = New;
+		Temp->pPrev = New;*/
+		Temp->pPrev=Temp->pPrev->pNext = new Element(Data,Temp,Temp->pPrev);
+		size++;
+	}
 
 	/////      Removing Elements:     /////
 	void pop_front()
@@ -168,20 +193,41 @@ public:
 		else
 		{
 			Head = Head->pNext;
-			delete Head->pPrevious;
-			Head->pPrevious = nullptr;
+			delete Head->pPrev;
+			Head->pPrev = nullptr;
 		}
 		size--;
 	}
 	void pop_back()
 	{
 		if (Head == Tail)return pop_front();
-		Tail = Tail->pPrevious;
+		Tail = Tail->pPrev;
 		delete Tail->pNext;
 		Tail->pNext = nullptr;
 		size--;
 	}
+	void erase(int index)
+	{
+		if (index >= size)return;
+		if (index == 0)return pop_front();
 
+		Element* Temp;
+		if (index < size / 2)
+		{
+			Temp = Head;
+			for (int i = 0; i < index; i++)Temp = Temp->pPrev;
+		}
+		else
+		{
+			Temp = Tail;
+			for (int i = 0; i < size - index - 1; i++)Temp = Temp->pPrev;
+		}
+		Temp->pPrev->pNext = Temp->pNext;
+		Temp->pNext->pPrev = Temp->pPrev;
+
+		delete Temp;
+		size--;
+	}
 
 	/////    Methods      ///////
 	void print()const
@@ -189,20 +235,19 @@ public:
 		cout << "Head: " << Head << endl;
 		for (Element* Temp = Head; Temp; Temp = Temp->pNext)
 		{
-			cout << Temp->pPrevious << tab << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
+			cout << Temp->pPrev << tab << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
 		}
 		cout << "Количесто элементов списка: " << size << endl;
 	}
 	void reverse_print()const
 	{
 		cout << "Tail: " << Tail << endl;
-		for (Element* Temp = Tail; Temp; Temp = Temp->pPrevious)
+		for (Element* Temp = Tail; Temp; Temp = Temp->pPrev)
 		{
-			cout << Temp->pPrevious << tab << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
+			cout << Temp->pPrev << tab << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
 		}
 		cout << "Количесто элементов списка: " << size << endl;
 	}
-
 };
 
 
@@ -220,6 +265,20 @@ void main()
 	}
 	list.print();
 	list.reverse_print();
+
+	int value;
+	int index;
+	cout << "Введите значение добавляемоего элемента: "; cin >> value;
+	cout << "Введите индекс добавляемоего элемента: "; cin >> index;
+	list.insert(value, index);
+	list.print();
+	list.reverse_print();
+
+	cout << "Введите индекс удаляемого элемента: "; cin >> index;
+	list.erase(index);
+	list.print();
+	list.reverse_print();
+
 
 	//list.push_back(123);
 	//list.print();
