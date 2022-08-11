@@ -227,6 +227,14 @@ public:
 	{
 		return nullptr;
 	}
+	ReverseIterator rbegin()
+	{
+		return Tail;
+	}
+	ReverseIterator rent()
+	{
+		return nullptr;
+	}
 	List()
 	{
 		//Head = nullptr;//Когда список пуст, его голова и хвост указывают на 0
@@ -484,11 +492,17 @@ void main()
 	cout << endl;
 #endif // ITERATORS_CHECK_1
 
-	List list1 = { 3,5,8,13,21 };
-	List list2 = { 34,55,89 };
-	List list3 = list1 + list2;
+	List<int> list1 = { 3,5,8,13,21 };
+	List<int> list2 = { 34,55,89 };
+	List<int> list3 = list1 + list2;
 	for (int i : list1)cout << i << tab; cout << endl;
 	for (int i : list2)cout << i << tab; cout << endl;
 	for (int i : list3)cout << i << tab; cout << endl;
+
+	List<double> d_list = { 1.5,2.7,3.13,8.3 };
+	d_list.print();
+	for (double i : d_list)cout << i << tab; cout << endl;
+	for (List<double>::ReverseIterator rit = d_list.rbegin(); rit != d + list.rent(); ++rit)
+		cout << *rit << tab;
 
 }
