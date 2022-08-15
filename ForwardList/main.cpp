@@ -24,6 +24,7 @@ public:
 		cout << "EDestructor:\t" << this << endl;
 	}
 	friend class ForwardList;
+	friend class Stack;
 	friend class Iterator;
 	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
 };
@@ -73,6 +74,7 @@ public:
 
 class ForwardList
 {
+protected:
 	Element* Head;   // ГОлова списка 
 	unsigned int size;
 public:
@@ -243,6 +245,41 @@ public:
 	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
 };
 
+class Stack :private ForwardList
+{
+public:
+	unsigned int get_size()const
+	{
+		return size;
+	}
+	void  push(int Data)
+	{
+		//Добавляет значение в контейнер
+		ForwardList::push_front(Data);
+	}
+	void pop()
+	{
+		//Возвращает значение вершины стека и удаляет вершину стека
+		//int Data = Head->Data;
+		//удаляет вершину стека
+		ForwardList::pop_front();
+		//return Data;
+	}
+	const int& top()const
+	{
+		return Head->Data;
+	}
+	 int& top()
+	{
+		return Head->Data;
+	}
+	void print()const
+	{
+		ForwardList::print();
+	}
+
+};
+
 ForwardList operator+(const ForwardList& left, const ForwardList& right)
 {
 	ForwardList cat = left;
@@ -349,4 +386,16 @@ void main()
 		cout << *it << tab;
 	}
 	cout << endl;
+
+	Stack stack;
+	stack.push(3);
+	stack.push(5);
+	stack.push(8);
+	stack.push(13);
+	stack.push(21);
+	cout << stack.get_size() << endl;
+	stack.print();
+	for(;stack.get_size();stack.pop())
+	cout << stack.top() << endl;
+	stack.print();
 }

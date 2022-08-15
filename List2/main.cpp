@@ -8,8 +8,6 @@ using std::endl;
 #define tab "\t"
 #define delimiter "\n---------------------------------------\n"
 
-//int Element::count = 0;
-
 //class Iterator
 //{
 //	Element* Temp;
