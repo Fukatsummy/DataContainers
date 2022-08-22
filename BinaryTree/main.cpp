@@ -52,8 +52,10 @@ public:
 	}
 	~Tree()
 	{
+		//clear();
 //#ifdef DEBUG	
 		cout << "TDestructor\t" << this << endl;
+		this->clear();
 //#endif // DEBUG
 	}
 	void insert(int Data)
@@ -83,6 +85,12 @@ public:
 	int depth()const
 	{
 		return depth(Root);
+	}
+	void clear()
+	{
+		clear(Root);
+		Root = nullptr;
+
 	}
 	void print()const
 	{
@@ -139,6 +147,21 @@ private:
 			else return depth(Root->pLeft) + 1 > depth(Root->pRight) + 1 ?
 			depth(Root->pLeft) + 1 : depth(Root->pRight) + 1;
 			
+	}
+	void clear(Element* Root)
+	{
+		if (Root == nullptr)return ;
+		clear(Root->pLeft);
+		clear(Root->pRight);
+		delete Root;
+	}
+	void erase(int Data, Element* Root)
+	{
+		if (Root == nullptr)return;
+		erase(Data, Root->pLeft);
+		erase(Data, Root->pRight);
+
+
 	}
 
 	void print(Element* Root)const
@@ -198,7 +221,7 @@ void main()
 	cout << "Сумма элементов дерева:" << tree.sum() << endl;
 	cout << "Средне арифметическая элементов дерева:" << tree.Avg() << endl;
 	cout << "Глубина дерева:" << tree.depth() << endl;
-	
+	tree.clear();
 	
 	UniqueTree unique_tree;
 	for (int i = 0; i < n; i++)
